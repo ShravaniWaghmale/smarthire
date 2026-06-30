@@ -1,13 +1,7 @@
-import { Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar";
-
-export default function MainLayout() {
+export default function MainLayout({ children }) {
   return (
-    <>
-      <Navbar />
-      <div style={{ padding: "20px" }}>
-        <Outlet />
-      </div>
-    </>
+    <div className="min-h-screen bg-[#030712] text-white overflow-x-hidden">
+      {children}
+    </div>
   );
 }

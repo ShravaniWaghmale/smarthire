@@ -1,75 +1,123 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import API from "../api/axios";
-import { useNavigate, Link } from "react-router-dom";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
 
-  const handleLogin = async () => {
-  try {
-    const res = await API.post("/auth/login", {
-      email,
-      password,
-    });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    localStorage.setItem("token", res.data.token);
-    setUser(res.data.user); // ✅ add this line
-    navigate("/dashboard");
-  } catch {
-    alert("Invalid credentials");
-  }
-};
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    setError("");
+
+    if (!email || !password) {
+      setError("Please enter email and password.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await API.post("/auth/login", {
+        email,
+        password,
+      });
+
+      login(res.data.token);
+
+      navigate("/dashboard");
+
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "Invalid email or password."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0b1220]">
+    <div className="flex items-center justify-center min-h-screen px-6 bg-[#07111f]">
 
-      <div className="w-full max-w-md p-8 border rounded-2xl bg-white/5 border-white/10 backdrop-blur">
+      <div className="w-full max-w-md p-8 border shadow-2xl rounded-3xl bg-white/5 backdrop-blur-xl border-white/10">
 
-        <h1 className="text-3xl font-bold text-center">
-          Welcome Back
+        <h1 className="text-4xl font-bold text-center text-white">
+          Welcome Back 👋
         </h1>
 
-        <p className="mt-2 text-center text-white/60">
-          Login to SmartHire
+        <p className="mt-2 text-sm text-center text-gray-400">
+          Login to continue using SmartHire
         </p>
 
-        <div className="mt-6 space-y-4">
-
-          <input
-            className="w-full p-3 border rounded-lg bg-white/5 border-white/10"
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-
-          <input
-            className="w-full p-3 border rounded-lg bg-white/5 border-white/10"
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-        </div>
-
-        <button
-          onClick={handleLogin}
-          className="w-full p-3 mt-6 font-semibold text-black rounded-lg bg-gradient-to-r from-purple-500 to-cyan-400"
+        <form
+          onSubmit={handleLogin}
+          className="mt-8 space-y-5"
         >
-          Login
-        </button>
 
-        <p className="mt-4 text-sm text-center text-white/60">
-          Don’t have an account?{" "}
-          <Link to="/register" className="text-cyan-400">
+          <div>
+            <label className="block mb-2 text-sm text-gray-300">
+              Email
+            </label>
+
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-3 text-white transition border rounded-xl bg-white/5 border-white/10 focus:outline-none focus:border-cyan-400"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-sm text-gray-300">
+              Password
+            </label>
+
+            <input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-3 text-white transition border rounded-xl bg-white/5 border-white/10 focus:outline-none focus:border-cyan-400"
+            />
+          </div>
+
+          {error && (
+            <div className="text-sm text-red-400">
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 font-semibold text-black transition rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:scale-[1.02] disabled:opacity-50"
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+
+        </form>
+
+        <p className="mt-6 text-sm text-center text-gray-400">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className="font-medium text-cyan-400 hover:text-cyan-300"
+          >
             Register
           </Link>
         </p>
 
       </div>
+
     </div>
   );
 }
