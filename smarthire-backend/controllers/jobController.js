@@ -5,7 +5,7 @@ exports.createJob = async (req, res) => {
   try {
     const job = await Job.create({
       ...req.body,
-      userId: req.user.id,
+      createdBy: req.user.id,
     });
 
     res.json(job);
@@ -17,7 +17,9 @@ exports.createJob = async (req, res) => {
 // GET JOBS
 exports.getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find({ userId: req.user.id });
+    const jobs = await Job.find({
+      createdBy: req.user.id,
+    });
     res.json(jobs);
   } catch (err) {
     res.status(500).json(err.message);
