@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 
 import Dashboard from "./pages/dashboard/Dashboard";
-//import Applications from "./pages/Applications/Applications";
+import Applications from "./pages/Applications/Applications";
 
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -38,14 +38,14 @@ function App() {
 
         {/* Applications */}
 
-        {/* <Route
+        <Route
           path="/applications"
           element={
             <ProtectedRoute>
               <Applications />
             </ProtectedRoute>
           }
-        /> */}
+        />
 
         {/* Profile */}
 
