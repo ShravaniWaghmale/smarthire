@@ -35,27 +35,47 @@ export default function JobFilters({
       <select
         value={location}
         onChange={(e) => setLocation(e.target.value)}
-        className="px-4 py-3 text-white border outline-none rounded-2xl border-white/10 bg-white/5 focus:border-cyan-500"
+        className="rounded-2xl border border-white/10 bg-[#111827] px-4 py-3 text-white outline-none transition focus:border-cyan-500"
       >
-        <option value="">All Locations</option>
-        <option value="Bangalore">Bangalore</option>
-        <option value="Hyderabad">Hyderabad</option>
-        <option value="Pune">Pune</option>
-        <option value="Mumbai">Mumbai</option>
-        <option value="Remote">Remote</option>
+        <option className="bg-[#111827] text-white" value="">
+          All Locations
+        </option>
+        <option className="bg-[#111827] text-white" value="Bangalore">
+          Bangalore
+        </option>
+        <option className="bg-[#111827] text-white" value="Hyderabad">
+          Hyderabad
+        </option>
+        <option className="bg-[#111827] text-white" value="Pune">
+          Pune
+        </option>
+        <option className="bg-[#111827] text-white" value="Mumbai">
+          Mumbai
+        </option>
+        <option className="bg-[#111827] text-white" value="Remote">
+          Remote
+        </option>
       </select>
-
+      
       {/* Job Type */}
 
       <select
         value={type}
         onChange={(e) => setType(e.target.value)}
-        className="px-4 py-3 text-white border outline-none rounded-2xl border-white/10 bg-white/5 focus:border-cyan-500"
+        className="rounded-2xl border border-white/10 bg-[#111827] px-4 py-3 text-white outline-none transition focus:border-cyan-500"
       >
-        <option value="">All Types</option>
-        <option value="Full Time">Full Time</option>
-        <option value="Internship">Internship</option>
-        <option value="Remote">Remote</option>
+        <option className="bg-[#111827] text-white" value="">
+          All Types
+        </option>
+        <option className="bg-[#111827] text-white" value="Full Time">
+          Full Time
+        </option>
+        <option className="bg-[#111827] text-white" value="Internship">
+          Internship
+        </option>
+        <option className="bg-[#111827] text-white" value="Remote">
+          Remote
+        </option>
       </select>
 
     </div>

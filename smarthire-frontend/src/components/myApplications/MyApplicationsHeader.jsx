@@ -15,44 +15,25 @@ export default function ApplicationsHeader({ onAdd }) {
       transition={{
         duration: 0.35,
       }}
-      className="flex items-center justify-between mb-10"
+      className="flex items-center justify-between mb-5"
     >
       {/* Left */}
 
-      <div>
+      {/* Hero */}
 
-        <h1 className="text-4xl font-bold tracking-tight text-white">
+        <section className="mb-10">
+          <p className="text-sm uppercase tracking-[0.3em] text-cyan-400">
+            My Applications
+          </p>
 
-          Applications
+          <h1 className="mt-3 text-5xl font-black text-white">
+            Your Applications
+          </h1>
 
-        </h1>
-
-        <p className="mt-2 text-gray-400">
-
-          Track and manage every job application from one workspace.
-
-        </p>
-
-      </div>
-
-      {/* Right */}
-
-      <motion.button
-        whileHover={{
-          scale: 1.04,
-        }}
-        whileTap={{
-          scale: 0.96,
-        }}
-        onClick={onAdd}
-        className="flex items-center gap-3 px-6 py-3 font-semibold text-white transition shadow-lg rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500 shadow-cyan-500/20"
-      >
-
-        <Plus size={20} />
-
-        Add Application
-
-      </motion.button>
+          <p className="max-w-2xl mt-4 text-lg leading-8 text-gray-400">
+            Track and Manage every job allpication here
+          </p>
+        </section>
     </motion.div>
   );
 }

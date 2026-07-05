@@ -51,6 +51,22 @@ export default function Jobs() {
     <AppShell>
       <div className="space-y-8">
 
+        {/* Hero */}
+
+        <section className="mb-10">
+          <p className="text-sm uppercase tracking-[0.3em] text-cyan-400">
+            Jobs
+          </p>
+
+          <h1 className="mt-3 text-5xl font-black text-white">
+            Apply to your Dream Jobs
+          </h1>
+
+          <p className="max-w-2xl mt-4 text-lg leading-8 text-gray-400">
+            Below is the list of Jobs
+          </p>
+        </section>
+
         <JobFilters
           jobs={jobs}
           setFilteredJobs={setFilteredJobs}

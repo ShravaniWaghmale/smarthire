@@ -4,9 +4,11 @@ import AppShell from "../../layouts/AppShell";
 
 import MyApplicationsHeader from "../../components/myApplications/MyApplicationsHeader";
 import MyApplicationsFilters from "../../components/myApplications/MyApplicationsFilters";
-import MyApplicationsTable from "../../components/myApplications/myApplicationsTable";
+import MyApplicationsTable from "../../components/myApplications/MyApplicationsTable";
+import ApplicationModal from "../../components/myApplications/ApplicationModal";
 
 import DeleteModal from "../../components/modals/DeleteModal";
+import ApplicationDetailsModal from "../../components/myApplications/ApplicationDetailsModal";
 
 import {
   getApplications,
@@ -17,18 +19,16 @@ import {
 
 export default function Applications() {
   const [applications, setApplications] = useState([]);
-
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
-
   const [statusFilter, setStatusFilter] = useState("All");
-
   const [sort, setSort] = useState("Newest");
 
   const [showModal, setShowModal] = useState(false);
-
   const [editingApplication, setEditingApplication] = useState(null);
+
+  const [selectedApplication, setSelectedApplication] = useState(null);
 
   const [deleteItem, setDeleteItem] = useState(null);
 
@@ -59,7 +59,6 @@ export default function Applications() {
       }
 
       setShowModal(false);
-
       setEditingApplication(null);
 
       loadApplications();
@@ -82,21 +81,41 @@ export default function Applications() {
 
   const filteredApplications = applications
     .filter((item) => {
+      const searchText = search.toLowerCase();
+
       const matchesSearch =
-        item.company.toLowerCase().includes(search.toLowerCase()) ||
-        item.role.toLowerCase().includes(search.toLowerCase());
+        item.company?.toLowerCase().includes(searchText) ||
+        item.role?.toLowerCase().includes(searchText) ||
+        item.location?.toLowerCase().includes(searchText) ||
+        item.status?.toLowerCase().includes(searchText);
 
       const matchesStatus =
-        statusFilter === "All" || item.status === statusFilter;
+        statusFilter === "All" ||
+        item.status === statusFilter;
 
       return matchesSearch && matchesStatus;
     })
     .sort((a, b) => {
-      if (sort === "Newest") {
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      }
+      switch (sort) {
+        case "Oldest":
+          return new Date(a.createdAt) - new Date(b.createdAt);
 
-      return new Date(a.createdAt) - new Date(b.createdAt);
+        case "Company":
+          return a.company.localeCompare(b.company);
+
+        case "Salary":
+          return (
+            parseInt(
+              (b.salary || "0").replace(/\D/g, "")
+            ) -
+            parseInt(
+              (a.salary || "0").replace(/\D/g, "")
+            )
+          );
+
+        default:
+          return new Date(b.createdAt) - new Date(a.createdAt);
+      }
     });
 
   return (
@@ -120,17 +139,33 @@ export default function Applications() {
       <MyApplicationsTable
         applications={filteredApplications}
         loading={loading}
+        onView={setSelectedApplication}
         onEdit={(item) => {
-            setEditingApplication(item);
-            setShowModal(true);
+          setEditingApplication(item);
+          setShowModal(true);
         }}
         onDelete={(item) => setDeleteItem(item)}
-        />
+      />
+
+      <ApplicationModal
+        open={showModal}
+        application={editingApplication}
+        onClose={() => {
+          setShowModal(false);
+          setEditingApplication(null);
+        }}
+        onSave={handleSave}
+      />
+
+      <ApplicationDetailsModal
+        application={selectedApplication}
+        onClose={() => setSelectedApplication(null)}
+      />
 
       <DeleteModal
         open={!!deleteItem}
-        title={deleteItem?.company}
-        onCancel={() => setDeleteItem(null)}
+        application={deleteItem}
+        onClose={() => setDeleteItem(null)}
         onConfirm={handleDelete}
       />
     </AppShell>
