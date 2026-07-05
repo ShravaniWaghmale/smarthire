@@ -13,7 +13,7 @@ export default function ApplicationsTable({
   if (loading) {
     return (
       <div className="flex h-72 items-center justify-center rounded-3xl border border-white/10 bg-[#0F172A]/95">
-        <div className="h-10 w-10 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent" />
+        <div className="w-10 h-10 border-4 rounded-full animate-spin border-cyan-500 border-t-transparent" />
       </div>
     );
   }
@@ -27,11 +27,11 @@ export default function ApplicationsTable({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35 }}
-      className="overflow-hidden rounded-3xl border border-white/10 bg-[#0F172A]/95 backdrop-blur-xl"
+      className="overflow-hidden rounded-3xl border border-white/10 bg-[#111827]/70 backdrop-blur-xl"
     >
       {/* Header */}
 
-      <div className="grid grid-cols-[2.4fr_1.8fr_1.2fr_1.2fr_1.2fr_120px] border-b border-white/10 px-8 py-5 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
+      <div className="grid grid-cols-[2.5fr_2fr_1.3fr_1.2fr_1.3fr_140px] border-b border-white/10 bg-white/[0.02] px-8 py-5 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500">
 
         <div>Company</div>
         <div>Role</div>

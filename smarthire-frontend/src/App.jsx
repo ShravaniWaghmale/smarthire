@@ -3,9 +3,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Jobs from "./pages/Jobs/Jobs";
+import Resume from "./pages/Resume/Resume";
+import Analytics from "./pages/Analytics/Analytics";
 
-import Dashboard from "./pages/dashboard/Dashboard";
-import Applications from "./pages/Applications/Applications";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import MyApplications from "./pages/MyApplications/MyApplications";
 
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -36,13 +39,46 @@ function App() {
           }
         />
 
+        {/* Jobs */}
+
+        <Route
+          path="/jobs"
+          element={
+            <ProtectedRoute>
+              <Jobs />
+            </ProtectedRoute>
+          }
+        />
+
         {/* Applications */}
 
         <Route
-          path="/applications"
+          path="/my-applications"
           element={
             <ProtectedRoute>
-              <Applications />
+              <MyApplications />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Resume */}
+
+        <Route
+          path="/resume"
+          element={
+            <ProtectedRoute>
+              <Resume />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Analytics */}
+
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <Analytics />
             </ProtectedRoute>
           }
         />

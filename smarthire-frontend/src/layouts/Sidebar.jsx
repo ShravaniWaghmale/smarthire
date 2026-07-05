@@ -4,6 +4,7 @@ import { useState, useContext, useRef, useEffect } from "react";
 import {
   LayoutDashboard,
   BriefcaseBusiness,
+  ClipboardList,
   FileText,
   BarChart3,
   Sparkles,
@@ -20,9 +21,14 @@ const navigation = [
     icon: LayoutDashboard,
   },
   {
-    name: "Applications",
-    path: "/applications",
+    name: "Jobs",
+    path: "/jobs",
     icon: BriefcaseBusiness,
+  },
+  {
+    name: "My Applications",
+    path: "/my-applications",
+    icon: ClipboardList,
   },
   {
     name: "Resume AI",
@@ -65,34 +71,27 @@ export default function Sidebar() {
 
       {/* Logo */}
 
-      <div className="flex items-center gap-3 px-8 py-8">
+        <div className="flex items-center gap-3 px-8 py-8 group">
 
-        <div className="flex items-center justify-center w-12 h-12 shadow-lg rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500">
+          <div className="flex items-center justify-center transition-all duration-300 shadow-lg h-11 w-11 rounded-xl bg-gradient-to-r from-cyan-500 via-blue-500 to-violet-500 shadow-cyan-500/30 group-hover:rotate-6 group-hover:scale-110 group-hover:shadow-cyan-500/50">
 
-          <Sparkles
-            size={22}
-            className="text-white"
-          />
+            <BriefcaseBusiness className="text-white" size={22} />
 
-        </div>
+          </div>
 
-        <div>
+          <div>
 
-          <h1 className="text-xl font-bold text-white">
+            <h1 className="text-2xl font-bold text-white transition duration-300 group-hover:text-cyan-300">
+              SmartHire
+            </h1>
 
-            SmartHire
+            <p className="text-xs text-gray-400">
+              AI Career Platform
+            </p>
 
-          </h1>
-
-          <p className="text-xs text-gray-400">
-
-            Job Tracker
-
-          </p>
+          </div>
 
         </div>
-
-      </div>
 
       {/* Navigation */}
 
@@ -100,7 +99,7 @@ export default function Sidebar() {
 
         <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-[0.25em] text-gray-500">
 
-          Workspace
+          AI Career Platform
 
         </p>
 

@@ -1,29 +1,36 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+import authRoutes from "./routes/authRoutes.js";
+import applicationRoutes from "./routes/applicationRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+import jobRoutes from "./routes/jobRoutes.js";
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
-
+app.use(cors());
 app.use(express.json());
 
-// routes
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/jobs", require("./routes/jobRoutes"));
-app.use("/api/applications", require("./routes/applicationRoutes"));
+app.use("/api/user", authRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/applications", applicationRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
-const PORT = process.env.PORT || 5000;
+console.log("JWT_SECRET Loaded:", process.env.JWT_SECRET);
 
-app.listen(PORT, () => {
-  console.log("Server running on port", PORT);
-});
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("MongoDB Connected");
+
+    app.listen(process.env.PORT || 5000, () => {
+      console.log(`Server running on port ${process.env.PORT || 5000}`);
+    });
+  })
+  .catch((err) => {
+    console.error(err);
+  });

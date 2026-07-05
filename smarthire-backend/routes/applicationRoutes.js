@@ -1,57 +1,25 @@
-const express = require("express");
+import express from "express";
+
+import {
+  getApplications,
+  createApplication,
+  updateApplication,
+  deleteApplication,
+  applyJob,
+} from "../controllers/applicationController.js";
+
+import protect from "../middleware/authMiddleware.js";
+
 const router = express.Router();
 
-const Application = require("../models/Application");
-const Job = require("../models/Job");
+router.get("/", protect, getApplications);
 
-const auth = require("../middleware/auth");
+router.post("/", protect, createApplication);
 
+router.post("/apply/:jobId", protect, applyJob);
 
-// APPLY FOR JOB
-router.post("/", auth, async (req, res) => {
-  try {
-    const { jobId } = req.body;
+router.put("/:id", protect, updateApplication);
 
-    const existing = await Application.findOne({
-      userId: req.user.id,
-      jobId,
-    });
+router.delete("/:id", protect, deleteApplication);
 
-    if (existing) {
-      return res.status(400).json({
-        message: "Already applied",
-      });
-    }
-
-    const application =
-      await Application.create({
-        userId: req.user.id,
-        jobId,
-      });
-
-    res.status(201).json(application);
-  } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
-  }
-});
-
-
-// MY APPLICATIONS
-router.get("/", auth, async (req, res) => {
-  try {
-    const applications =
-      await Application.find({
-        userId: req.user.id,
-      }).populate("jobId");
-
-    res.json(applications);
-  } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
-  }
-});
-
-module.exports = router;
+export default router;
