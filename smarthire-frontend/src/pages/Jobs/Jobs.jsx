@@ -12,14 +12,16 @@ import AppShell from "../../layouts/AppShell";
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
-
   const [filteredJobs, setFilteredJobs] = useState([]);
-
   const [applications, setApplications] = useState([]);
-
   const [loading, setLoading] = useState(true);
 
   const [selectedJob, setSelectedJob] = useState(null);
+
+  // Filters
+  const [search, setSearch] = useState("");
+  const [location, setLocation] = useState("");
+  const [type, setType] = useState("");
 
   const refreshApplications = async () => {
     const data = await getApplications();
@@ -35,9 +37,7 @@ export default function Jobs() {
         ]);
 
         setJobs(jobsData);
-
         setFilteredJobs(jobsData);
-
         setApplications(applicationsData);
       } finally {
         setLoading(false);
@@ -47,11 +47,36 @@ export default function Jobs() {
     loadData();
   }, []);
 
+  // Apply Filters
+  useEffect(() => {
+    let result = [...jobs];
+
+    if (search.trim()) {
+      result = result.filter(
+        (job) =>
+          job.company.toLowerCase().includes(search.toLowerCase()) ||
+          job.title.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (location) {
+      result = result.filter(
+        (job) => job.location === location
+      );
+    }
+
+    if (type) {
+      result = result.filter(
+        (job) => job.type === type
+      );
+    }
+
+    setFilteredJobs(result);
+  }, [search, location, type, jobs]);
+
   return (
     <AppShell>
       <div className="space-y-8">
-
-        {/* Hero */}
 
         <section className="mb-10">
           <p className="text-sm uppercase tracking-[0.3em] text-cyan-400">
@@ -63,24 +88,38 @@ export default function Jobs() {
           </h1>
 
           <p className="max-w-2xl mt-4 text-lg leading-8 text-gray-400">
-            Below is the list of Jobs
+            Browse opportunities tailored for you.
           </p>
         </section>
 
         <JobFilters
-          jobs={jobs}
-          setFilteredJobs={setFilteredJobs}
+          search={search}
+          setSearch={setSearch}
+          location={location}
+          setLocation={setLocation}
+          type={type}
+          setType={setType}
         />
 
         {loading ? (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {[1,2,3,4,5,6].map((i)=>(
-              <JobSkeleton key={i}/>
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <JobSkeleton key={i} />
             ))}
+          </div>
+        ) : filteredJobs.length === 0 ? (
+          <div className="py-20 text-center border border-dashed rounded-3xl border-white/10 bg-white/[0.02]">
+            <h2 className="text-2xl font-bold text-white">
+              No Jobs Found
+            </h2>
+
+            <p className="mt-3 text-gray-400">
+              Try changing your filters.
+            </p>
           </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {filteredJobs.map((job)=>(
+            {filteredJobs.map((job) => (
               <JobCard
                 key={job._id}
                 job={job}
@@ -97,7 +136,6 @@ export default function Jobs() {
           onApplied={refreshApplications}
           onClose={() => setSelectedJob(null)}
         />
-
       </div>
     </AppShell>
   );

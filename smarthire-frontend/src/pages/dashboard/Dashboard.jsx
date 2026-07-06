@@ -15,7 +15,15 @@ import {
 } from "lucide-react";
 
 export default function Dashboard() {
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState({
+    total: 0,
+    interview: 0,
+    offer: 0,
+    rejected: 0,
+    responseRate: 0,
+    recentApplications: [],
+  });
+  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
