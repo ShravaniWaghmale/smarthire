@@ -14,9 +14,6 @@ const protect = (req, res, next) => {
       ? authHeader.split(" ")[1]
       : authHeader;
 
-    console.log("Received Token:", token);
-    console.log("JWT Secret (verify):", process.env.JWT_SECRET);
-
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET
@@ -26,7 +23,7 @@ const protect = (req, res, next) => {
 
     next();
   } catch (err) {
-    console.log("JWT Verify Error:", err.message);
+    console.error("JWT Verify Error:", err.message);
 
     return res.status(401).json({
       message: "Invalid or expired token",

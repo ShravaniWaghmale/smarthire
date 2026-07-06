@@ -13,6 +13,8 @@ import {
 
 import { motion, AnimatePresence } from "framer-motion";
 import { AuthContext } from "../context/AuthContext";
+import toast from "react-hot-toast";
+import LogoutModal from "../components/modals/LogoutModal";
 
 const navigation = [
   {
@@ -48,6 +50,7 @@ export default function Sidebar() {
   const { logout, user } = useContext(AuthContext);
 
   const [open, setOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const menuRef = useRef(null);
 
@@ -65,6 +68,14 @@ export default function Sidebar() {
   }, []);
 
   const firstLetter = (user?.name || "U").charAt(0).toUpperCase();
+  
+  const handleLogout = () => {
+    logout();
+
+    toast.success("Logged out successfully 👋");
+
+    navigate("/login");
+  };
 
   return (
     <aside className="sticky top-0 flex h-screen w-[280px] flex-col border-r border-white/10 bg-[#0A1020]/95 backdrop-blur-3xl">
@@ -193,9 +204,7 @@ export default function Sidebar() {
         </button>
 
         <AnimatePresence>
-
           {open && (
-
             <motion.div
               initial={{
                 opacity: 0,
@@ -214,7 +223,6 @@ export default function Sidebar() {
               }}
               className="absolute bottom-[108px] left-6 right-6 overflow-hidden rounded-2xl border border-white/10 bg-[#111827] shadow-2xl"
             >
-
               <button
                 onClick={() => {
                   setOpen(false);
@@ -222,9 +230,7 @@ export default function Sidebar() {
                 }}
                 className="w-full px-5 py-3 text-left text-gray-300 transition hover:bg-white/5"
               >
-
                 Profile
-
               </button>
 
               <button
@@ -234,32 +240,31 @@ export default function Sidebar() {
                 }}
                 className="w-full px-5 py-3 text-left text-gray-300 transition hover:bg-white/5"
               >
-
                 Settings
-
               </button>
 
               <div className="border-t border-white/10" />
 
               <button
                 onClick={() => {
-                  logout();
-                  navigate("/login");
+                  setOpen(false);
+                  setShowLogoutModal(true);
                 }}
                 className="w-full px-5 py-3 text-left text-red-400 transition hover:bg-red-500/10"
               >
-
                 Logout
-
               </button>
-
             </motion.div>
-
           )}
-
         </AnimatePresence>
 
       </div>
+
+      <LogoutModal
+        open={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+      />
 
     </aside>
   );

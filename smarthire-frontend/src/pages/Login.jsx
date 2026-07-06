@@ -1,5 +1,8 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
+import toast from "react-hot-toast";
+
 import API from "../api/axios";
 import { AuthContext } from "../context/AuthContext";
 
@@ -9,6 +12,8 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -33,12 +38,16 @@ export default function Login() {
 
       login(res.data.token);
 
-      navigate("/dashboard");
+      toast.success("Welcome Back 👋");
 
+      navigate("/dashboard");
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Invalid email or password."
-      );
+      const msg =
+        err.response?.data?.message ||
+        "Invalid email or password.";
+
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -46,7 +55,6 @@ export default function Login() {
 
   return (
     <div className="flex items-center justify-center min-h-screen px-6 bg-[#07111f]">
-
       <div className="w-full max-w-md p-8 border shadow-2xl rounded-3xl bg-white/5 backdrop-blur-xl border-white/10">
 
         <h1 className="text-4xl font-bold text-center text-white">
@@ -72,7 +80,7 @@ export default function Login() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 text-white transition border rounded-xl bg-white/5 border-white/10 focus:outline-none focus:border-cyan-400"
+              className="w-full p-3 text-white border rounded-xl bg-white/5 border-white/10 focus:outline-none focus:border-cyan-400"
             />
           </div>
 
@@ -81,13 +89,29 @@ export default function Login() {
               Password
             </label>
 
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 text-white transition border rounded-xl bg-white/5 border-white/10 focus:outline-none focus:border-cyan-400"
-            />
+            <div className="relative">
+
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-3 pr-12 text-white border rounded-xl bg-white/5 border-white/10 focus:outline-none focus:border-cyan-400"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute text-gray-400 -translate-y-1/2 right-4 top-1/2 hover:text-cyan-400"
+              >
+                {showPassword ? (
+                  <EyeOff size={20} />
+                ) : (
+                  <Eye size={20} />
+                )}
+              </button>
+
+            </div>
           </div>
 
           {error && (
@@ -99,7 +123,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 font-semibold text-black transition rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:scale-[1.02] disabled:opacity-50"
+            className="w-full py-3 font-semibold text-black rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:scale-[1.02] disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
@@ -110,14 +134,13 @@ export default function Login() {
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="font-medium text-cyan-400 hover:text-cyan-300"
+            className="font-medium text-cyan-400"
           >
             Register
           </Link>
         </p>
 
       </div>
-
     </div>
   );
 }

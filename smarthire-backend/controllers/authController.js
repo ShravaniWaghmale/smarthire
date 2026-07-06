@@ -9,9 +9,7 @@ export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const existingUser = await User.findOne({
-      email,
-    });
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
       return res.status(400).json({
@@ -27,8 +25,22 @@ export const register = async (req, res) => {
       password: hashedPassword,
     });
 
+    const token = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
     res.status(201).json({
-      message: "User registered successfully",
+      message: "Registration successful",
+      token,
       user,
     });
   } catch (err) {
