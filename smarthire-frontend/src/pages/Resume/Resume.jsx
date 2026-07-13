@@ -9,9 +9,7 @@ import ResumeAnalysis from "../../components/resume/ResumeAnalysis";
 import ATSScoreCard from "../../components/resume/ATSScoreCard";
 import GrammarCard from "../../components/resume/GrammarCard";
 import SuggestionsCard from "../../components/resume/SuggestionsCard";
-import MissingSkills from "../../components/resume/MissingSkills";
 import ResumeStrength from "../../components/resume/ResumeStrength";
-import DownloadResume from "../../components/resume/DownloadResume";
 
 export default function Resume() {
   const [analysis, setAnalysis] = useState(null);
@@ -34,99 +32,97 @@ export default function Resume() {
 
           <p className="max-w-3xl mt-5 text-lg leading-8 text-gray-400">
             Upload your resume and let SmartHire AI analyze it for ATS
-            compatibility, grammar, missing skills, and personalized
+            compatibility, grammar, strengths and personalized
             improvements.
           </p>
 
         </section>
 
-        {/* Upload */}
-
-        <ResumeUpload
-          onAnalysis={setAnalysis}
-        />
-
-        {/* Before Upload */}
+        {/* BEFORE UPLOAD */}
 
         {!analysis && (
-          <section className="grid gap-6 mt-12 md:grid-cols-2 xl:grid-cols-4">
+          <>
+            <ResumeUpload onAnalysis={setAnalysis} />
 
-            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-cyan-500/30">
+            <section className="grid gap-6 mt-12 md:grid-cols-2 xl:grid-cols-4">
 
-              <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500">
+              {/* ATS */}
 
-                <Sparkles className="text-white" size={22} />
+              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-cyan-500/30">
 
-              </div>
+                <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500">
+                  <Sparkles className="text-white" size={22} />
+                </div>
 
-              <h2 className="mt-6 text-xl font-bold text-white">
-                ATS Score
-              </h2>
+                <h2 className="mt-6 text-xl font-bold text-white">
+                  ATS Score
+                </h2>
 
-              <p className="mt-3 leading-7 text-gray-400">
-                Check how well your resume performs against ATS systems.
-              </p>
-
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-500/30">
-
-              <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-violet-500 to-fuchsia-500">
-
-                <Sparkles className="text-white" size={22} />
+                <p className="mt-3 leading-7 text-gray-400">
+                  Check how ATS-friendly your resume is.
+                </p>
 
               </div>
 
-              <h2 className="mt-6 text-xl font-bold text-white">
-                Missing Skills
-              </h2>
+              {/* Grammar */}
 
-              <p className="mt-3 leading-7 text-gray-400">
-                Find important keywords recruiters expect.
-              </p>
+              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-emerald-500/30">
 
-            </div>
+                <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-500">
+                  <Sparkles className="text-white" size={22} />
+                </div>
 
-            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-emerald-500/30">
+                <h2 className="mt-6 text-xl font-bold text-white">
+                  Grammar Review
+                </h2>
 
-              <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-500">
-
-                <Sparkles className="text-white" size={22} />
-
-              </div>
-
-              <h2 className="mt-6 text-xl font-bold text-white">
-                Grammar Review
-              </h2>
-
-              <p className="mt-3 leading-7 text-gray-400">
-                Improve grammar and professional writing.
-              </p>
-
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-orange-500/30">
-
-              <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-orange-500 to-yellow-500">
-
-                <Sparkles className="text-white" size={22} />
+                <p className="mt-3 leading-7 text-gray-400">
+                  Improve grammar, readability and professionalism.
+                </p>
 
               </div>
 
-              <h2 className="mt-6 text-xl font-bold text-white">
-                AI Suggestions
-              </h2>
+              {/* Strength */}
 
-              <p className="mt-3 leading-7 text-gray-400">
-                Personalized improvements for your resume.
-              </p>
+              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-500/30">
 
-            </div>
+                <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-violet-500 to-fuchsia-500">
+                  <Sparkles className="text-white" size={22} />
+                </div>
 
-          </section>
+                <h2 className="mt-6 text-xl font-bold text-white">
+                  Resume Strength
+                </h2>
+
+                <p className="mt-3 leading-7 text-gray-400">
+                  Discover what recruiters will like the most.
+                </p>
+
+              </div>
+
+              {/* Suggestions */}
+
+              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-orange-500/30">
+
+                <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-orange-500 to-yellow-500">
+                  <Sparkles className="text-white" size={22} />
+                </div>
+
+                <h2 className="mt-6 text-xl font-bold text-white">
+                  AI Suggestions
+                </h2>
+
+                <p className="mt-3 leading-7 text-gray-400">
+                  Receive personalized recommendations to improve your resume.
+                </p>
+
+              </div>
+
+            </section>
+          </>
         )}
 
-        {/* After Upload */}
+        {/* AFTER UPLOAD */}
 
         {analysis && (
           <div className="mt-12 space-y-8">
@@ -134,24 +130,13 @@ export default function Resume() {
             <ResumeAnalysis analysis={analysis} />
 
             <div className="grid gap-6 lg:grid-cols-2">
-
               <ATSScoreCard analysis={analysis} />
-
               <GrammarCard analysis={analysis} />
-
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-2">
-
-              <MissingSkills analysis={analysis} />
-
-              <ResumeStrength analysis={analysis} />
-
-            </div>
+            <ResumeStrength analysis={analysis} />
 
             <SuggestionsCard analysis={analysis} />
-
-            <DownloadResume analysis={analysis} />
 
           </div>
         )}

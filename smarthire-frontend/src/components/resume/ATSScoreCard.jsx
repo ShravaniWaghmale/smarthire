@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { Trophy, TrendingUp } from "lucide-react";
 
-export default function ATSScoreCard({ score }) {
+export default function ATSScoreCard({ analysis }) {
+  const score = analysis?.atsScore || 0;
   const percentage = Math.min(score, 100);
 
   let status = "Needs Improvement";
@@ -17,23 +18,13 @@ export default function ATSScoreCard({ score }) {
 
   return (
     <motion.div
-      initial={{
-        opacity: 0,
-        y: 20,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-      }}
-      transition={{
-        delay: 0.15,
-      }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.15 }}
       className="rounded-3xl border border-white/10 bg-white/[0.03] p-8"
     >
       <div className="flex items-center justify-between">
-
         <div>
-
           <p className="text-sm uppercase tracking-[0.25em] text-cyan-400">
             ATS SCORE
           </p>
@@ -48,18 +39,10 @@ export default function ATSScoreCard({ score }) {
             <TrendingUp size={16} />
             {status}
           </div>
-
         </div>
 
-        {/* Circle */}
-
         <div className="relative flex items-center justify-center">
-
-          <svg
-            width="140"
-            height="140"
-            className="-rotate-90"
-          >
+          <svg width="140" height="140" className="-rotate-90">
             <circle
               cx="70"
               cy="70"
@@ -78,12 +61,9 @@ export default function ATSScoreCard({ score }) {
               stroke="url(#gradient)"
               strokeWidth="12"
               strokeDasharray={364}
-              initial={{
-                strokeDashoffset: 364,
-              }}
+              initial={{ strokeDashoffset: 364 }}
               animate={{
-                strokeDashoffset:
-                  364 - (364 * percentage) / 100,
+                strokeDashoffset: 364 - (364 * percentage) / 100,
               }}
               transition={{
                 duration: 1.5,
@@ -92,7 +72,6 @@ export default function ATSScoreCard({ score }) {
             />
 
             <defs>
-
               <linearGradient
                 id="gradient"
                 x1="0%"
@@ -100,45 +79,23 @@ export default function ATSScoreCard({ score }) {
                 x2="100%"
                 y2="0%"
               >
-                <stop
-                  offset="0%"
-                  stopColor="#06B6D4"
-                />
-
-                <stop
-                  offset="100%"
-                  stopColor="#8B5CF6"
-                />
-
+                <stop offset="0%" stopColor="#06B6D4" />
+                <stop offset="100%" stopColor="#8B5CF6" />
               </linearGradient>
-
             </defs>
-
           </svg>
 
           <div className="absolute flex flex-col items-center">
-
-            <Trophy
-              className="mb-1 text-yellow-400"
-              size={22}
-            />
-
+            <Trophy className="mb-1 text-yellow-400" size={22} />
             <span className="text-2xl font-black text-white">
               {score}
             </span>
-
           </div>
-
         </div>
-
       </div>
 
-      {/* Progress */}
-
       <div className="mt-8">
-
         <div className="flex justify-between mb-2 text-sm">
-
           <span className="text-gray-400">
             ATS Compatibility
           </span>
@@ -146,26 +103,16 @@ export default function ATSScoreCard({ score }) {
           <span className="font-semibold text-white">
             {percentage}%
           </span>
-
         </div>
 
         <div className="h-3 overflow-hidden rounded-full bg-white/10">
-
           <motion.div
-            initial={{
-              width: 0,
-            }}
-            animate={{
-              width: `${percentage}%`,
-            }}
-            transition={{
-              duration: 1.4,
-            }}
+            initial={{ width: 0 }}
+            animate={{ width: `${percentage}%` }}
+            transition={{ duration: 1.4 }}
             className={`h-full rounded-full bg-gradient-to-r ${color}`}
           />
-
         </div>
-
       </div>
 
       <p className="mt-6 leading-7 text-gray-400">
@@ -176,7 +123,6 @@ export default function ATSScoreCard({ score }) {
         ATS compatibility score. Optimizing missing keywords and improving
         project descriptions can significantly increase interview chances.
       </p>
-
     </motion.div>
   );
 }

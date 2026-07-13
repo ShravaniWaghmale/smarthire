@@ -3,7 +3,6 @@ import mammoth from "mammoth";
 
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 
-
 export async function extractResumeText(filePath, extension) {
   let extractedText = "";
 
@@ -51,12 +50,10 @@ export async function extractResumeText(filePath, extension) {
   }
 
   // ============================
-  // Cleanup
+  // IMPORTANT:
+  // Do NOT delete uploaded resume.
+  // We need it for PDF preview.
   // ============================
-
-  if (fs.existsSync(filePath)) {
-    fs.unlinkSync(filePath);
-  }
 
   return extractedText
     .replace(/\r/g, "")

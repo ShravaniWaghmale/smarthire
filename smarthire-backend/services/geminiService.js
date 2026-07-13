@@ -1,65 +1,71 @@
-import { GoogleGenAI } from "@google/genai";
+import dotenv from "dotenv";
+dotenv.config();
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+
+const model = genAI.getGenerativeModel({
+  model: "gemini-2.5-flash",
 });
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export async function analyzeResumeWithAI(resumeText) {
-  try {
-    const prompt = `
-You are an expert ATS Resume Reviewer and Career Coach.
+  const prompt = `
+You are an ATS Resume Reviewer.
 
-Analyze the following resume.
-
-Return ONLY valid JSON.
-
-Use this EXACT format:
+Analyze the resume and return ONLY valid JSON.
 
 {
-  "atsScore": 0,
-  "grammarScore": 0,
-  "strengths": [],
-  "missingSkills": [],
-  "suggestions": [],
-  "summary": ""
+  "atsScore":0,
+  "grammarScore":0,
+  "strengths":[],
+  "suggestions":[],
+  "professionalSummary":""
 }
-
-Rules:
-
-1. atsScore must be an integer from 0-100.
-2. grammarScore must be an integer from 0-100.
-3. strengths should contain 3-6 short bullet points.
-4. missingSkills should contain important technologies or keywords missing from the resume.
-5. suggestions should contain practical improvements.
-6. summary should be a rewritten professional summary in 3-4 lines.
-7. Return ONLY JSON.
-8. Do NOT include markdown.
-9. Do NOT include explanation.
 
 Resume:
 
 ${resumeText}
 `;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
+  const MAX_RETRIES = 3;
 
-    let text = response.text;
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const result = await model.generateContent(prompt);
 
-    // Remove markdown if Gemini wraps JSON
+      const text = result.response.text();
 
-    text = text
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
+      console.log("===== GEMINI RAW RESPONSE =====");
+      console.log(text);
 
-    return JSON.parse(text);
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
 
-  } catch (error) {
-    console.error("Gemini Error:", error);
+      if (!jsonMatch) {
+        throw new Error("Gemini did not return valid JSON.");
+      }
 
-    throw new Error("Failed to analyze resume using AI.");
+      return JSON.parse(jsonMatch[0]);
+
+    } catch (err) {
+      console.log(`Gemini Attempt ${attempt} failed`);
+
+      // Retry only on 503
+      if (err.status === 503 && attempt < MAX_RETRIES) {
+        console.log("Retrying in 3 seconds...");
+        await sleep(3000);
+        continue;
+      }
+
+      if (err.status === 503) {
+        throw new Error(
+          "Gemini AI is currently busy. Please try again after a few seconds."
+        );
+      }
+
+      throw err;
+    }
   }
 }

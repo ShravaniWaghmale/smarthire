@@ -2,6 +2,9 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
 import authRoutes from "./routes/authRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
@@ -11,35 +14,37 @@ import resumeRoutes from "./routes/resumeRoutes.js";
 
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+console.log("Current Working Directory:");
+console.log(process.cwd());
+
+console.log("Backend Directory:");
+console.log(__dirname);
+
+const uploadsPath = path.join(__dirname, "uploads");
+
+console.log("Uploads Folder:");
+console.log(uploadsPath);
+
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true });
+}
+
 const app = express();
 
-// ============================
-// Middleware
-// ============================
-
 app.use(cors());
-
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
 
-// ============================
-// Routes
-// ============================
+app.use("/uploads", express.static(uploadsPath));
 
 app.use("/api/auth", authRoutes);
-
 app.use("/api/jobs", jobRoutes);
-
 app.use("/api/applications", applicationRoutes);
-
 app.use("/api/dashboard", dashboardRoutes);
-
 app.use("/api/resume", resumeRoutes);
-
-// ============================
-// Health Check
-// ============================
 
 app.get("/", (req, res) => {
   res.json({
@@ -48,14 +53,9 @@ app.get("/", (req, res) => {
   });
 });
 
-// ============================
-// Global Error Handler
-// ============================
-
 app.use((err, req, res, next) => {
   console.error(err);
 
-  // Multer errors
   if (err.code === "LIMIT_FILE_SIZE") {
     return res.status(400).json({
       success: false,
@@ -63,22 +63,11 @@ app.use((err, req, res, next) => {
     });
   }
 
-  if (err.message === "Only PDF and DOCX resumes are allowed.") {
-    return res.status(400).json({
-      success: false,
-      message: err.message,
-    });
-  }
-
-  return res.status(500).json({
+  res.status(500).json({
     success: false,
-    message: err.message || "Internal Server Error",
+    message: err.message,
   });
 });
-
-// ============================
-// MongoDB
-// ============================
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -91,6 +80,4 @@ mongoose
       );
     });
   })
-  .catch((err) => {
-    console.error("MongoDB Error:", err);
-  });
+  .catch(console.error);

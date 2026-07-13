@@ -1,13 +1,11 @@
 import path from "path";
+import fs from "fs";
 
 import { extractResumeText } from "../utils/extractResumeText.js";
+import { analyzeResumeWithAI } from "../services/geminiService.js";
 
 export const analyzeResume = async (req, res) => {
   try {
-    // ============================
-    // Validate Upload
-    // ============================
-
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -20,10 +18,6 @@ export const analyzeResume = async (req, res) => {
       .replace(".", "")
       .toLowerCase();
 
-    // ============================
-    // Extract Resume Text
-    // ============================
-
     const extractedText = await extractResumeText(
       req.file.path,
       extension
@@ -32,52 +26,34 @@ export const analyzeResume = async (req, res) => {
     if (!extractedText || extractedText.trim().length < 20) {
       return res.status(400).json({
         success: false,
-        message:
-          "Unable to extract enough text from this resume.",
+        message: "Unable to extract enough text from this resume.",
       });
     }
 
-    // ============================
-    // Temporary Mock Response
-    // (Next we'll replace this with AI)
-    // ============================
+    const analysis = await analyzeResumeWithAI(extractedText);
+
+    const absolutePath = path.resolve(req.file.path);
+
+    console.log("========== FILE DEBUG ==========");
+    console.log("Uploaded File:", req.file);
+    console.log("Absolute Path:", absolutePath);
+    console.log("Exists:", fs.existsSync(absolutePath));
+    console.log("================================");
+
+    const resumeUrl = `http://localhost:5000/uploads/${req.file.filename}`;
 
     res.json({
       success: true,
-
-      extractedText,
-
-      analysis: {
-        atsScore: 78,
-
-        grammarScore: 91,
-
-        strengths: [
-          "Good project descriptions",
-          "Clean formatting",
-          "Technical skills are visible",
-        ],
-
-        missingSkills: [
-          "TypeScript",
-          "Docker",
-          "CI/CD",
-        ],
-
-        suggestions: [
-          "Add measurable achievements.",
-          "Improve professional summary.",
-          "Use stronger action verbs.",
-          "Include more ATS keywords.",
-        ],
-      },
+      analysis,
+      resumeUrl,
     });
+
   } catch (error) {
     console.error("Resume Analysis Error:", error);
 
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
-      message: "Resume analysis failed.",
+      message: error.message || "Resume analysis failed.",
     });
   }
 };

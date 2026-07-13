@@ -5,7 +5,8 @@ import {
   BookOpen,
 } from "lucide-react";
 
-export default function GrammarCard({ score }) {
+export default function GrammarCard({ analysis }) {
+  const score = analysis?.grammarScore || 0;
   const mistakes =
     score >= 95
       ? 0
