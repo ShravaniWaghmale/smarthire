@@ -127,7 +127,10 @@ export default function Resume() {
         {analysis && (
           <div className="mt-12 space-y-8">
 
-            <ResumeAnalysis analysis={analysis} />
+            <ResumeAnalysis
+              analysis={analysis}
+              onReset={() => setAnalysis(null)}
+            />
 
             <div className="grid gap-6 lg:grid-cols-2">
               <ATSScoreCard analysis={analysis} />

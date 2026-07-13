@@ -5,6 +5,7 @@ import { analyzeResume } from "../../api/resume";
 
 export default function ResumeUpload({ onAnalysis }) {
   const inputRef = useRef();
+
   const [uploading, setUploading] = useState(false);
 
   const handleUpload = async (file) => {
@@ -15,17 +16,17 @@ export default function ResumeUpload({ onAnalysis }) {
 
       const result = await analyzeResume(file);
 
-      console.log(result);
-
       toast.success("Resume analyzed successfully 🎉");
 
       onAnalysis({
         ...result.analysis,
         resumeUrl: result.resumeUrl,
+        originalName: result.originalName,
       });
     } catch (err) {
       toast.error(
-        err.response?.data?.message || "Resume analysis failed."
+        err.response?.data?.message ||
+          "Resume analysis failed."
       );
     } finally {
       setUploading(false);
@@ -36,7 +37,7 @@ export default function ResumeUpload({ onAnalysis }) {
     <div className="rounded-3xl border border-dashed border-cyan-500/30 bg-white/[0.03] p-10">
       <div className="flex flex-col items-center">
 
-        <div className="flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-cyan-500 to-blue-500">
           <UploadCloud size={36} className="text-white" />
         </div>
 
@@ -45,7 +46,7 @@ export default function ResumeUpload({ onAnalysis }) {
         </h2>
 
         <p className="mt-3 text-center text-gray-400">
-          Upload a PDF or DOCX resume (Maximum 5 MB)
+          Upload PDF or DOCX (Maximum 5 MB)
         </p>
 
         <input
@@ -59,9 +60,9 @@ export default function ResumeUpload({ onAnalysis }) {
         <button
           disabled={uploading}
           onClick={() => inputRef.current.click()}
-          className="px-8 py-4 mt-8 font-semibold text-white rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500"
+          className="mt-8 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 px-8 py-4 font-semibold text-white"
         >
-          {uploading ? "Analyzing Resume..." : "Choose Resume"}
+          {uploading ? "Analyzing..." : "Choose Resume"}
         </button>
 
       </div>
