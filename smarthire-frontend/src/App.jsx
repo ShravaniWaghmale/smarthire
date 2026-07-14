@@ -7,7 +7,7 @@ import Jobs from "./pages/Jobs/Jobs";
 import Resume from "./pages/Resume/Resume";
 import Analytics from "./pages/Analytics/Analytics";
 
-import Dashboard from "./pages/Dashboard/Dashboard";
+import Dashboard from "./pages/dashboard/Dashboard";
 import MyApplications from "./pages/MyApplications/MyApplications";
 
 import Profile from "./pages/Profile";
