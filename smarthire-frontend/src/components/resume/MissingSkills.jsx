@@ -12,7 +12,7 @@ export default function MissingSkills({ skills = [] }) {
 
       {skills.length === 0 ? (
         <div className="p-5 text-center border rounded-2xl border-emerald-500/20 bg-emerald-500/10 text-emerald-400">
-          Excellent! No missing skills detected.
+          Excellent! Your resume already contains all important skills from this job description.
         </div>
       ) : (
         <div className="flex flex-wrap gap-3">

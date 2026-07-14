@@ -4,15 +4,21 @@ import { Sparkles } from "lucide-react";
 import AppShell from "../../layouts/AppShell";
 
 import ResumeUpload from "../../components/resume/ResumeUpload";
-
 import ResumeAnalysis from "../../components/resume/ResumeAnalysis";
 import ATSScoreCard from "../../components/resume/ATSScoreCard";
 import GrammarCard from "../../components/resume/GrammarCard";
 import SuggestionsCard from "../../components/resume/SuggestionsCard";
 import ResumeStrength from "../../components/resume/ResumeStrength";
+import JobDescriptionInput from "../../components/resume/JobDescriptionInput";
+import JobMatchCard from "../../components/resume/JobMatchCard";
+import MissingSkills from "../../components/resume/MissingSkills";
 
 export default function Resume() {
   const [analysis, setAnalysis] = useState(null);
+
+  const [jobDescription, setJobDescription] = useState("");
+  const [jobAnalysis, setJobAnalysis] = useState(null);
+  const [loadingJob, setLoadingJob] = useState(false);
 
   return (
     <AppShell>
@@ -32,8 +38,7 @@ export default function Resume() {
 
           <p className="max-w-3xl mt-5 text-lg leading-8 text-gray-400">
             Upload your resume and let SmartHire AI analyze it for ATS
-            compatibility, grammar, strengths and personalized
-            improvements.
+            compatibility, grammar, strengths and personalized improvements.
           </p>
 
         </section>
@@ -46,10 +51,7 @@ export default function Resume() {
 
             <section className="grid gap-6 mt-12 md:grid-cols-2 xl:grid-cols-4">
 
-              {/* ATS */}
-
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-cyan-500/30">
-
+              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
                 <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500">
                   <Sparkles className="text-white" size={22} />
                 </div>
@@ -61,13 +63,9 @@ export default function Resume() {
                 <p className="mt-3 leading-7 text-gray-400">
                   Check how ATS-friendly your resume is.
                 </p>
-
               </div>
 
-              {/* Grammar */}
-
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-emerald-500/30">
-
+              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
                 <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-500">
                   <Sparkles className="text-white" size={22} />
                 </div>
@@ -79,13 +77,9 @@ export default function Resume() {
                 <p className="mt-3 leading-7 text-gray-400">
                   Improve grammar, readability and professionalism.
                 </p>
-
               </div>
 
-              {/* Strength */}
-
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-violet-500/30">
-
+              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
                 <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-violet-500 to-fuchsia-500">
                   <Sparkles className="text-white" size={22} />
                 </div>
@@ -97,13 +91,9 @@ export default function Resume() {
                 <p className="mt-3 leading-7 text-gray-400">
                   Discover what recruiters will like the most.
                 </p>
-
               </div>
 
-              {/* Suggestions */}
-
-              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-orange-500/30">
-
+              <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6">
                 <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-orange-500 to-yellow-500">
                   <Sparkles className="text-white" size={22} />
                 </div>
@@ -115,7 +105,6 @@ export default function Resume() {
                 <p className="mt-3 leading-7 text-gray-400">
                   Receive personalized recommendations to improve your resume.
                 </p>
-
               </div>
 
             </section>
@@ -129,7 +118,11 @@ export default function Resume() {
 
             <ResumeAnalysis
               analysis={analysis}
-              onReset={() => setAnalysis(null)}
+              onReset={() => {
+                setAnalysis(null);
+                setJobDescription("");
+                setJobAnalysis(null);
+              }}
             />
 
             <div className="grid gap-6 lg:grid-cols-2">
@@ -140,6 +133,31 @@ export default function Resume() {
             <ResumeStrength analysis={analysis} />
 
             <SuggestionsCard analysis={analysis} />
+
+            {/* =========================
+                Resume vs Job
+            ========================== */}
+
+            <JobDescriptionInput
+              jobDescription={jobDescription}
+              setJobDescription={setJobDescription}
+              loading={loadingJob}
+              setLoading={setLoadingJob}
+              resumeAnalysis={analysis}
+              onAnalysis={setJobAnalysis}
+            />
+
+            {jobAnalysis && (
+              <div className="grid gap-6 lg:grid-cols-2">
+
+                <JobMatchCard analysis={jobAnalysis} />
+
+                <MissingSkills
+                  skills={jobAnalysis.missingSkills}
+                />
+
+              </div>
+            )}
 
           </div>
         )}

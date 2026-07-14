@@ -69,3 +69,48 @@ ${resumeText}
     }
   }
 }
+
+export async function analyzeResumeJobMatch(
+  resumeText,
+  jobDescription
+) {
+  const prompt = `
+You are an ATS recruiter.
+
+Compare the following Resume with the Job Description.
+
+Return ONLY valid JSON.
+
+{
+  "matchScore":0,
+  "missingSkills":[],
+  "matchingSkills":[],
+  "suggestions":[]
+}
+
+Resume:
+
+${resumeText}
+
+========================
+
+Job Description:
+
+${jobDescription}
+`;
+
+  const result = await model.generateContent(prompt);
+
+  const text = result.response.text();
+
+  console.log("===== JOB MATCH RESPONSE =====");
+  console.log(text);
+
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+
+  if (!jsonMatch) {
+    throw new Error("Gemini returned invalid JSON.");
+  }
+
+  return JSON.parse(jsonMatch[0]);
+}
