@@ -5,6 +5,9 @@ import dotenv from "dotenv";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import dns from "dns";
+
+dns.setDefaultResultOrder("ipv4first");
 
 import authRoutes from "./routes/authRoutes.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
