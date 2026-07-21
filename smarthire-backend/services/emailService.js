@@ -3,14 +3,23 @@ import nodemailer from "nodemailer";
 console.log("EMAIL_USER:", process.env.EMAIL_USER);
 console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "Loaded" : "Missing");
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
+export const sendOTPEmail = async (email, otp) => {
+  console.log("Testing SMTP connection...");
 
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+  await transporter.verify();
+
+  console.log("SMTP Connected Successfully");
+
+  await transporter.sendMail({
+    from: `"SmartHire" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: "SmartHire Password Reset OTP",
+    html: `
+      <h2>Your OTP is:</h2>
+      <h1>${otp}</h1>
+    `,
+  });
+};
 
 export const sendOTPEmail = async (email, otp) => {
   await transporter.sendMail({
